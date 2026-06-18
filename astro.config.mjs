@@ -266,7 +266,18 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 		server: {
 			watch: {
-				ignored: ["**/package/**", "**/Firefly-docs/**"],
+				usePolling: true,
+				interval: 300,
+				binaryInterval: 1000,
+				ignored: [
+					"**/package/**",
+					"**/Firefly-docs/**",
+					"**/node_modules/**",
+					"**/.pnpm-store/**",
+					"**/.git/**",
+					"**/dist/**",
+					"**/.vercel/**",
+				],
 			},
 		},
 		resolve: {
