@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "yzttz",
 
 	// 站点 URL
-	site_url: "ejhduu.top",
+	site_url: "https://ejhduu.top",
 
 	// 站点描述
 	description:
