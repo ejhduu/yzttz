@@ -24,6 +24,14 @@ export const galleryConfig: GalleryConfig = {
 			tags: ["崩坏星穹铁道", "流萤"],
 		},
 		{
+			id: "emoji",
+			name: "（表情包）相册",
+			description: "一些有趣的表情包集合。",
+			location: "网络",
+			date: "2026-06-28",
+			tags: ["表情包"],
+		},
+		{
 			id: "encrypted-test",
 			name: "加密相册示例",
 			description:
