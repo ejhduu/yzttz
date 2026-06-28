@@ -40,6 +40,15 @@ export const friendsConfig: FriendLink[] = [
 		weight: 99,
 		enabled: true,
 	},
+	{
+		title: "在线GIF制作器和工具集",
+		imgurl: "https://ezgif.com/favicon.ico",
+		desc: "Ezgif - 在线GIF制作、编辑与转换工具集",
+		siteurl: "https://ezgif.com/",
+		tags: ["工具", "GIF"],
+		weight: 98,
+		enabled: true,
+	},
 ];
 
 // 获取启用的友链并进行排序
