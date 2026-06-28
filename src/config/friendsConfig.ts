@@ -43,7 +43,7 @@ export const friendsConfig: FriendLink[] = [
 	{
 		title: "在线GIF制作器和工具集",
 		imgurl: "https://ezgif.com/favicon.ico",
-		desc: "Ezgif - 在线GIF制作、编辑与转换工具集",
+		desc: "友情链接",
 		siteurl: "https://ezgif.com/",
 		tags: ["工具", "GIF"],
 		weight: 98,
