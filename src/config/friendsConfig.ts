@@ -21,7 +21,26 @@ export const friendsPageConfig: FriendsPageConfig = {
 };
 
 // 友链配置
-export const friendsConfig: FriendLink[] = [];
+export const friendsConfig: FriendLink[] = [
+	{
+		title: "永雏塔菲弹幕站",
+		imgurl: "https://danmakus.meowers.me/favicon.ico",
+		desc: "永雏塔菲直播间弹幕站",
+		siteurl: "https://danmakus.meowers.me/",
+		tags: ["永雏塔菲", "弹幕站"],
+		weight: 100,
+		enabled: true,
+	},
+	{
+		title: "永雏塔菲百科",
+		imgurl: "https://aka.doubaocdn.com/s/q4fw1wgHlo",
+		desc: "永雏塔菲百科，世界第一可爱！",
+		siteurl: "https://acetaffy.org",
+		tags: ["永雏塔菲", "百科"],
+		weight: 99,
+		enabled: true,
+	},
+];
 
 // 获取启用的友链并进行排序
 export const getEnabledFriends = (): FriendLink[] => {
