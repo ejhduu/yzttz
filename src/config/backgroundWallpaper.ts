@@ -71,10 +71,12 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 支持单个视频路径（字符串）或多个视频循环（数组）
 		// 支持远程视频URL，本地视频请放在 public/assets/videos/ 目录下
 		// playerUrl: "/assets/videos/firefly.mp4",
-		playerUrl: [
-			"https://www.image2url.com/r2/default/videos/1781851852403-38dfa456-3f55-4fbd-9338-f72efa60fb91.mp4",
-			"https://www.image2url.com/r2/default/videos/1782640033847-734c36b9-f463-4e80-8084-3d7eab16b09d.mp4",
-		],
+		// 也支持按桌面/移动端分别配置：
+		// playerUrl: { desktop: ["..."], mobile: ["..."] }
+		playerUrl: {
+			desktop: "https://www.image2url.com/r2/default/videos/1782640033847-734c36b9-f463-4e80-8084-3d7eab16b09d.mp4",
+			mobile: "https://www.image2url.com/r2/default/videos/1781851852403-38dfa456-3f55-4fbd-9338-f72efa60fb91.mp4",
+		},
 	},
 	// 横幅壁纸和全屏壁纸共享配置
 	common: {

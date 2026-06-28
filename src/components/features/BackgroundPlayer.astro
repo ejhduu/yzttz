@@ -4,15 +4,33 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 
 export interface Props {
-	playerUrl: string | string[];
+	playerUrl:
+		| string
+		| string[]
+		| { desktop?: string | string[]; mobile?: string | string[] };
 	playerMode?: "order" | "random";
 }
 
 const { playerUrl, playerMode = "order" } = Astro.props;
 
-const urls = Array.isArray(playerUrl) ? playerUrl : [playerUrl];
-const hasMultiple = urls.length > 1;
-const urlsJson = JSON.stringify(urls);
+function toArray(v: string | string[] | undefined): string[] {
+	if (!v) return [];
+	return Array.isArray(v) ? v : [v];
+}
+
+let desktopUrls: string[] = [];
+let mobileUrls: string[] = [];
+if (typeof playerUrl === "string" || Array.isArray(playerUrl)) {
+	const arr = toArray(playerUrl);
+	desktopUrls = arr;
+	mobileUrls = arr;
+} else if (playerUrl && typeof playerUrl === "object") {
+	desktopUrls = toArray(playerUrl.desktop);
+	mobileUrls = toArray(playerUrl.mobile);
+}
+
+const hasAnyUrls = desktopUrls.length > 0 || mobileUrls.length > 0;
+const playerConfigJson = JSON.stringify({ desktop: desktopUrls, mobile: mobileUrls });
 
 const tPrev = i18n(I18nKey.videoPrev);
 const tNext = i18n(I18nKey.videoNext);
@@ -20,37 +38,33 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 ---
 
 {
-	urls.length > 0 && (
+	hasAnyUrls && (
 		<div id="bg-player">
 			<div
 				id="bg-player-overlay"
 				class="absolute inset-0 z-15 overflow-hidden pointer-events-none transition-opacity duration-500 ease-in-out opacity-0"
 			>
-				<video id="bg-player-video" preload="auto" playsinline loop={!hasMultiple} class="size-full object-cover"></video>
+				<video id="bg-player-video" preload="auto" playsinline class="size-full object-cover"></video>
 			</div>
 
 			<div id="bg-player-controls" class="absolute bottom-4 left-4 z-30 flex items-center gap-1.5 group">
-				{hasMultiple && (
-					<button
-						id="bg-prev-btn"
-						class="w-11 h-11 flex items-center justify-center rounded-full border border-white/30 bg-black/35 text-white/50 backdrop-blur-sm cursor-pointer transition-all duration-200 opacity-0 scale-90 group-hover:opacity-50 group-hover:scale-100 hover:!opacity-80 hover:!scale-100"
-						title={tPrev}
-						aria-label={tPrev}
-					>
-						<Icon is:inline name="material-symbols:skip-previous-rounded" class="text-[1rem]" />
-					</button>
-				)}
+				<button
+					id="bg-prev-btn"
+					class="w-11 h-11 flex items-center justify-center rounded-full border border-white/30 bg-black/35 text-white/50 backdrop-blur-sm cursor-pointer transition-all duration-200 opacity-0 scale-90 group-hover:opacity-50 group-hover:scale-100 hover:!opacity-80 hover:!scale-100"
+					title={tPrev}
+					aria-label={tPrev}
+				>
+					<Icon is:inline name="material-symbols:skip-previous-rounded" class="text-[1rem]" />
+				</button>
 
-				{hasMultiple && (
-					<button
-						id="bg-next-btn"
-						class="w-11 h-11 flex items-center justify-center rounded-full border border-white/30 bg-black/35 text-white/50 backdrop-blur-sm cursor-pointer transition-all duration-200 opacity-0 scale-90 group-hover:opacity-50 group-hover:scale-100 hover:!opacity-80 hover:!scale-100"
-						title={tNext}
-						aria-label={tNext}
-					>
-						<Icon is:inline name="material-symbols:skip-next-rounded" class="text-[1rem]" />
-					</button>
-				)}
+				<button
+					id="bg-next-btn"
+					class="w-11 h-11 flex items-center justify-center rounded-full border border-white/30 bg-black/35 text-white/50 backdrop-blur-sm cursor-pointer transition-all duration-200 opacity-0 scale-90 group-hover:opacity-50 group-hover:scale-100 hover:!opacity-80 hover:!scale-100"
+					title={tNext}
+					aria-label={tNext}
+				>
+					<Icon is:inline name="material-symbols:skip-next-rounded" class="text-[1rem]" />
+				</button>
 			</div>
 
 			<div
@@ -63,9 +77,16 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 	)
 }
 
-<script is:inline define:vars={{ urls: urlsJson, playerMode, hasMultiple }}>
+<script is:inline define:vars={{ playerConfigJson, playerMode }}>
 	(() => {
-		var urlList = JSON.parse(urls);
+		var cfg = JSON.parse(playerConfigJson);
+		// 按屏幕宽度选择视频列表（>=1024 视为桌面端），缺省时回退到另一端
+		var isDesktop = window.innerWidth >= 1024;
+		var desktopList = cfg.desktop || [];
+		var mobileList = cfg.mobile || [];
+		var urlList = isDesktop
+			? (desktopList.length ? desktopList : mobileList)
+			: (mobileList.length ? mobileList : desktopList);
 		if (!urlList.length) return;
 		var isMultiple = urlList.length > 1;
 
@@ -76,6 +97,9 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 		var toast = document.getElementById("bg-player-toast");
 
 		if (!video) return;
+
+		// 单视频时启用原生循环，多视频时由 ended 事件切换
+		video.loop = !isMultiple;
 
 		// 防止 is:inline 脚本重复注册监听器（Swup 导航会重新执行脚本）
 		if (video.getAttribute("data-player-init")) return;
