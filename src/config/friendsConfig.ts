@@ -24,7 +24,7 @@ export const friendsPageConfig: FriendsPageConfig = {
 export const friendsConfig: FriendLink[] = [
 	{
 		title: "永雏塔菲弹幕站",
-		imgurl: "https://danmakus.meowers.me/favicon.ico",
+		imgurl: "https://www.image2url.com/r2/default/images/1782634132194-aedebdd7-f13d-4f32-8408-2a0dd2dd10ea.png",
 		desc: "永雏塔菲直播间弹幕站",
 		siteurl: "https://danmakus.meowers.me/",
 		tags: ["永雏塔菲", "弹幕站"],
