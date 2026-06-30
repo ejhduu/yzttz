@@ -75,7 +75,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// playerUrl: { desktop: ["..."], mobile: ["..."] }
 		playerUrl: {
 			desktop: "https://www.image2url.com/r2/default/videos/1782640033847-734c36b9-f463-4e80-8084-3d7eab16b09d.mp4",
-			mobile: "/assets/videos/taffy19Century.mp4",
+			mobile: "/assets/videos/taffy19century.mp4",
 		},
 	},
 	// 横幅壁纸和全屏壁纸共享配置
