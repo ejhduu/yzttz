@@ -576,11 +576,6 @@ const hasMultipleImages =
             window.addEventListener('bannerCarouselChange', function(e) {
                 e.detail && e.detail.enabled ? startAutoPlay() : stopAutoPlay();
             });
-            // 导航栏换图片按钮：切换到下一张
-            window.addEventListener('bg-image-next', function() {
-                var slides = getVisibleSlides();
-                changeToSlide(getCurrentIndex(slides) + 1);
-            });
             window.addEventListener('wallpaperModeChange', function(e) {
                 if (e.detail && (e.detail.mode === 'banner' || e.detail.mode === 'fullscreen')) {
                     if (isCarouselEnabled()) startAutoPlay();
