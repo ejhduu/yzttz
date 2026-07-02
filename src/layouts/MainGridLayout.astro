@@ -584,9 +584,10 @@ const hasMultipleImages =
                 }
             });
 
-            // 随机首张
+            // 随机首张（视频加载中时保持第一张固定，不随机也不自动轮播）
             var slides = getVisibleSlides();
-            if (slides.length > 1) {
+            var isVideoLoading = document.body.hasAttribute('data-video-loading') || document.documentElement.hasAttribute('data-video-loading');
+            if (slides.length > 1 && !isVideoLoading) {
                 var randomIdx = Math.floor(Math.random() * slides.length);
                 for (var k = 0; k < slides.length; k++) {
                     if (k === randomIdx) slides[k].classList.add('active');
@@ -595,9 +596,27 @@ const hasMultipleImages =
             }
 
             // 启动
-            if (isCarouselEnabled() && isBannerWallpaperMode()) {
+            if (!isVideoLoading && isCarouselEnabled() && isBannerWallpaperMode()) {
                 startAutoPlay();
             }
+
+            // 视频加载完成后恢复随机首图和轮播
+            window.addEventListener('bg-player-video-ready', function () {
+                var currentSlides = getVisibleSlides();
+                if (currentSlides.length > 1) {
+                    var randomIdx2 = Math.floor(Math.random() * currentSlides.length);
+                    var currentIdx = -1;
+                    for (var j = 0; j < currentSlides.length; j++) {
+                        if (currentSlides[j].classList.contains('active')) { currentIdx = j; break; }
+                    }
+                    if (randomIdx2 !== currentIdx) {
+                        changeToSlide(randomIdx2);
+                    }
+                }
+                if (isCarouselEnabled() && isBannerWallpaperMode()) {
+                    startAutoPlay();
+                }
+            });
         })();
     </script>
     )}

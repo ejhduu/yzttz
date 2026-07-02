@@ -203,6 +203,10 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 				if (overlay) { overlay.classList.remove("opacity-100"); overlay.classList.add("opacity-0"); }
 				syncAttr();
 				showToast();
+				// 视频加载失败也要移除loading标记，恢复轮播
+				document.body.removeAttribute("data-video-loading");
+				document.documentElement.removeAttribute("data-video-loading");
+				window.dispatchEvent(new CustomEvent("bg-player-video-ready"));
 			}
 		}
 
@@ -216,6 +220,10 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 			if (isPlaying) {
 				syncAttr();
 				if (overlay) { overlay.classList.remove("opacity-0"); overlay.classList.add("opacity-100"); }
+				// 移除加载标记，通知轮播恢复随机
+				document.body.removeAttribute("data-video-loading");
+				document.documentElement.removeAttribute("data-video-loading");
+				window.dispatchEvent(new CustomEvent("bg-player-video-ready"));
 			}
 		});
 		if (prevBtn) prevBtn.addEventListener("click", function () { switchTrack(prevIndex()); });
@@ -239,6 +247,8 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 
 		// 页面加载后自动播放背景视频
 		// 不立即显示overlay，让用户先看到静态背景图，等视频加载完成后再过渡到视频
+		document.body.setAttribute("data-video-loading", "true");
+		document.documentElement.setAttribute("data-video-loading", "true");
 		function autoPlay() {
 			if (!isPlaying) {
 				isPlaying = true;
