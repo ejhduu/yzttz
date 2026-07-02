@@ -137,10 +137,14 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 			return (currentIndex - 1 + urlList.length) % urlList.length;
 		}
 
+		function syncButton() {
+			window.dispatchEvent(new CustomEvent("bg-player-state-change", { detail: { playing: isPlaying } }));
+		}
+
 		function syncAttr() {
 			document.body.toggleAttribute("data-bg-video-playing", isPlaying);
 			document.documentElement.toggleAttribute("data-bg-video-playing", isPlaying);
-			window.dispatchEvent(new CustomEvent("bg-player-state-change", { detail: { playing: isPlaying } }));
+			syncButton();
 		}
 
 		function doPlay() {
@@ -206,8 +210,14 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 		window.addEventListener("bg-player-toggle", toggle);
 		video.addEventListener("ended", onEnded);
 		video.addEventListener("error", onError);
-		// 播放成功时重置错误计数
-		video.addEventListener("playing", function () { errorCount = 0; });
+		// 播放成功时重置错误计数，并显示overlay（视频加载完成后从背景图过渡到视频）
+		video.addEventListener("playing", function () {
+			errorCount = 0;
+			if (isPlaying) {
+				syncAttr();
+				if (overlay) { overlay.classList.remove("opacity-0"); overlay.classList.add("opacity-100"); }
+			}
+		});
 		if (prevBtn) prevBtn.addEventListener("click", function () { switchTrack(prevIndex()); });
 		if (nextBtn) nextBtn.addEventListener("click", function () { switchTrack(pickIndex(currentIndex)); });
 
@@ -228,11 +238,11 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 		}
 
 		// 页面加载后自动播放背景视频
+		// 不立即显示overlay，让用户先看到静态背景图，等视频加载完成后再过渡到视频
 		function autoPlay() {
 			if (!isPlaying) {
 				isPlaying = true;
-				syncAttr();
-				if (overlay) { overlay.classList.remove("opacity-0"); overlay.classList.add("opacity-100"); }
+				syncButton();
 				requestAnimationFrame(function () { doPlay(); });
 			}
 		}
